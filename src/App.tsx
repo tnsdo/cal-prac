@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Main = styled.div`
-  width: 230px;
+  width: 200px;
   height: 350px;
   border-radius: 20px;
   display: flex;
@@ -28,6 +28,8 @@ const But = styled.button`
   color: white;
   font-size: 20px;
   background-color: #343434;
+  font-size: 17px;
+  font-weight: 500;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -43,7 +45,7 @@ const Zero = styled.button`
   color: white;
   font-size: 20px;
   background-color: #343434;
-  width: 80px;
+  width: 90px;
   height: 40px;
   border-radius: 35px;
   display: flex;
