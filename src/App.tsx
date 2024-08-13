@@ -14,6 +14,7 @@ const Main = styled.div`
   align-items: center;
   background-color: black;
 `;
+
 const Input = styled.div`
   width: 200px;
   height: 50px;
@@ -75,6 +76,7 @@ const Cal1 = styled.button`
   align-items: center;
   font-weight: 500;
 `;
+
 const Cal = styled.button`
   background-color: #ff9900;
   font-weight: 500;
@@ -90,52 +92,121 @@ const Cal = styled.button`
 
 const App = () => {
   const [calc, setCalc] = useState("");
+  const [operCheck, setOperCheck] = useState(false);
+  const [pointCheck, setPointCheck] = useState(true);
+
   const getNum = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setCalc((prev) => prev + e.currentTarget.value);
+    const value = e.currentTarget.value;
+    setCalc((prev) => (prev === "0" ? value : prev + value));
+    setOperCheck(true);
   };
+
+  const getOper = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const value = e.currentTarget.value;
+    if (operCheck) {
+      setCalc((prev) => prev + value);
+      setOperCheck(false);
+      setPointCheck(true);
+    }
+  };
+
+  const getPoint = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const value = e.currentTarget.value;
+    if (calc.length > 0 && pointCheck) {
+      setCalc((prev) => prev + value);
+      setPointCheck(false);
+    }
+  };
+
+  const getResult = () => {
+    try {
+      const replace_str = calc.replace(/x/gi, "*").replace(/\//gi, "/");
+      const result = eval(replace_str);
+      if (isNaN(result) || result === Infinity) {
+        alert("계산할 수 없습니다.");
+        setCalc("");
+      } else {
+        setCalc(String(result));
+        setPointCheck(true);
+        setOperCheck(true);
+      }
+    } catch {
+      alert("계산할 수 없습니다.");
+      setCalc("");
+    }
+  };
+
+  const delCalc = () => {
+    if (calc.length > 0) {
+      const lastChar = calc.slice(-1);
+      if (lastChar === ".") setPointCheck(true);
+      if (isNaN(Number(lastChar))) setOperCheck(true);
+      const str = String(calc).slice(0, -1);
+      setCalc((prev) => str);
+    }
+  };
+
+  const allClear = () => {
+    setPointCheck(true);
+    setOperCheck(false);
+    setCalc("");
+  };
+
   return (
     <Main>
-      <Input>{calc}</Input>
+      <Input>{calc || "0"}</Input>
       <Butcon>
-        <Cal1>AC</Cal1>
-        <Cal1>+/-</Cal1>
-        <Cal1>%</Cal1>
-        <Cal>/</Cal>
-        <But value={7} onClick={getNum}>
+        <Cal1 onClick={allClear}>AC</Cal1>
+        <Cal1 onClick={delCalc}>DEL</Cal1>
+        <Cal1 value="%" onClick={getOper}>
+          %
+        </Cal1>
+        <Cal value="/" onClick={getOper}>
+          /
+        </Cal>
+        <But value="7" onClick={getNum}>
           7
         </But>
-        <But value={8} onClick={getNum}>
+        <But value="8" onClick={getNum}>
           8
         </But>
-        <But value={9} onClick={getNum}>
+        <But value="9" onClick={getNum}>
           9
         </But>
-        <Cal>x</Cal>
-        <But value={4} onClick={getNum}>
+        <Cal value="x" onClick={getOper}>
+          x
+        </Cal>
+        <But value="4" onClick={getNum}>
           4
         </But>
-        <But value={5} onClick={getNum}>
+        <But value="5" onClick={getNum}>
           5
         </But>
-        <But value={6} onClick={getNum}>
+        <But value="6" onClick={getNum}>
           6
         </But>
-        <Cal>-</Cal>
-        <But value={1} onClick={getNum}>
+        <Cal value="-" onClick={getOper}>
+          -
+        </Cal>
+        <But value="1" onClick={getNum}>
           1
         </But>
-        <But value={2} onClick={getNum}>
+        <But value="2" onClick={getNum}>
           2
         </But>
-        <But value={3} onClick={getNum}>
+        <But value="3" onClick={getNum}>
           3
         </But>
-        <Cal>+</Cal>
-        <Zero value={0} onClick={getNum}>
+        <Cal value="+" onClick={getOper}>
+          +
+        </Cal>
+        <Zero value="0" onClick={getNum}>
           0
         </Zero>
-        <But>.</But>
-        <Cal>=</Cal>
+        <But value="." onClick={getPoint}>
+          .
+        </But>
+        <Cal onClick={getResult}>=</Cal>
       </Butcon>
     </Main>
   );
