@@ -15,14 +15,20 @@ const Main = styled.div`
   background-color: black;
 `;
 
-const Input = styled.div`
-  width: 200px;
+interface InputProps {
+  length: number;
+}
+
+const Input = styled.div<InputProps>`
+  width: 190px;
   height: 50px;
   border: 2px solid #4b89dc;
   color: white;
   text-align: right;
+  font-size: 30px;
   margin-bottom: auto;
-  margin-top: 40px;
+  margin-top: 70px;
+  font-size: ${(props) => (props.length > 10 ? "16px" : "24px")};
 `;
 
 const But = styled.button`
@@ -65,8 +71,8 @@ const Butcon = styled.div`
 
 const Cal1 = styled.button`
   background-color: #a9a9a9;
-  font-size: 17px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 1000;
   color: black;
   width: 40px;
   height: 40px;
@@ -103,7 +109,19 @@ const App = () => {
 
   const getOper = (e: React.MouseEvent<HTMLButtonElement>) => {
     const value = e.currentTarget.value;
-    if (operCheck) {
+    if (value === "%") {
+      if (calc) {
+        try {
+          const currentNumber = parseFloat(calc);
+          const percentageValue = currentNumber * 0.01;
+          setCalc(String(percentageValue));
+          setOperCheck(true);
+          setPointCheck(true);
+        } catch {
+          setCalc("");
+        }
+      }
+    } else if (operCheck) {
       setCalc((prev) => prev + value);
       setOperCheck(false);
       setPointCheck(true);
@@ -154,7 +172,7 @@ const App = () => {
 
   return (
     <Main>
-      <Input>{calc || "0"}</Input>
+      <Input length={calc.length}>{calc || "0"}</Input>
       <Butcon>
         <Cal1 onClick={allClear}>AC</Cal1>
         <Cal1 onClick={delCalc}>DEL</Cal1>
