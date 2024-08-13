@@ -22,7 +22,6 @@ interface InputProps {
 const Input = styled.div<InputProps>`
   width: 190px;
   height: 50px;
-  border: 2px solid #4b89dc;
   color: white;
   text-align: right;
   font-size: 30px;
