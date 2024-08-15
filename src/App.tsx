@@ -137,10 +137,9 @@ const App = () => {
 
   const getResult = () => {
     try {
-      const replace_str = calc.replace(/x/gi, "*").replace(/\//gi, "/");
+      const replace_str = calc.replace(/x/gi, "*");
       const result = eval(replace_str);
       if (isNaN(result) || result === Infinity) {
-        alert("계산할 수 없습니다.");
         setCalc("");
       } else {
         setCalc(String(result));
@@ -148,18 +147,21 @@ const App = () => {
         setOperCheck(true);
       }
     } catch {
-      alert("계산할 수 없습니다.");
       setCalc("");
     }
   };
 
-  const delCalc = () => {
+  const pmCalc = () => {
     if (calc.length > 0) {
-      const lastChar = calc.slice(-1);
-      if (lastChar === ".") setPointCheck(true);
-      if (isNaN(Number(lastChar))) setOperCheck(true);
-      const str = String(calc).slice(0, -1);
-      setCalc((prev) => str);
+      try {
+        const currentNumber = parseFloat(calc);
+        const percentageValue = currentNumber * -1;
+        setCalc(String(percentageValue));
+        setOperCheck(true);
+        setPointCheck(true);
+      } catch {
+        setCalc("");
+      }
     }
   };
 
@@ -174,7 +176,7 @@ const App = () => {
       <Input length={calc.length}>{calc || "0"}</Input>
       <Butcon>
         <Cal1 onClick={allClear}>AC</Cal1>
-        <Cal1 onClick={delCalc}>DEL</Cal1>
+        <Cal1 onClick={pmCalc}>+/-</Cal1>
         <Cal1 value="%" onClick={getOper}>
           %
         </Cal1>
